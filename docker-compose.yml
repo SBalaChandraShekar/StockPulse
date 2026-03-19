@@ -1,0 +1,71 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stockpulse-app
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/stockpulse
+      DB_USERNAME: stockpulse
+      DB_PASSWORD: stockpulse
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CACHE_TYPE: redis
+      APP_TIMEZONE: Asia/Kolkata
+      ALPHA_VANTAGE_API_KEY: ${ALPHA_VANTAGE_API_KEY:-demo}
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-no-reply@stockpulse.local}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: stockpulse-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:17
+    container_name: stockpulse-postgres
+    environment:
+      POSTGRES_DB: stockpulse
+      POSTGRES_USER: stockpulse
+      POSTGRES_PASSWORD: stockpulse
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stockpulse -d stockpulse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.4
+    container_name: stockpulse-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+  redis-data:

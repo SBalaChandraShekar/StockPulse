@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:stockpulse;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cache:
+    type: simple
+
+app:
+  security:
+    jwt:
+      issuer: stockpulse-test
+      expiration-minutes: 60
+      secret: VGVzdFN0b2NrUHVsc2VKd3RTZWNyZXRLZXlGb3JUZXN0aW5nT25seTEyMzQ=
+  alpha-vantage:
+    base-url: https://www.alphavantage.co
+    api-key: demo
+  market-data:
+    poll-interval-ms: 60000
+    quote-ttl-seconds: 60
+    fallback-to-mock-on-provider-error: true
+  portfolio:
+    initial-cash-balance: 100000.00
+  alerts:
+    mail:
+      enabled: false
+      from: no-reply@test.stockpulse.local

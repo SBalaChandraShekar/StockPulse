@@ -1,0 +1,8 @@
+target/
+.m2/
+frontend/node_modules/
+frontend/dist/
+.git/
+.idea/
+.vscode/
+src/main/resources/application-local.yml

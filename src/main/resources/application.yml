@@ -1,0 +1,69 @@
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+
+spring:
+  config:
+    import: optional:classpath:application-local.yml
+  application:
+    name: stockpulse
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/stockpulse}
+    username: ${DB_USERNAME:stockpulse}
+    password: ${DB_PASSWORD:stockpulse}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  cache:
+    type: ${CACHE_TYPE:simple}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  security:
+    cors:
+      allowed-origins: ${APP_SECURITY_CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
+    jwt:
+      issuer: stockpulse
+      expiration-minutes: 120
+      secret: ${JWT_SECRET:U3RvY2tQdWxzZS1kZXYtb25seS1qd3Qtc2VjcmV0LWtleS1jaGFuZ2UtbWU=}
+  alpha-vantage:
+    base-url: https://www.alphavantage.co
+    api-key: ${ALPHA_VANTAGE_API_KEY:demo}
+  market-data:
+    poll-interval-ms: 60000
+    quote-ttl-seconds: 60
+    fallback-to-mock-on-provider-error: false
+  portfolio:
+    initial-cash-balance: 100000.00
+  alerts:
+    mail:
+      enabled: ${ALERTS_MAIL_ENABLED:false}
+      from: ${MAIL_FROM:no-reply@stockpulse.local}
