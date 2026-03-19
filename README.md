@@ -77,13 +77,12 @@ The frontend should point at the deployed backend:
 
 If you deploy the frontend and backend on different public domains, add the frontend URL to `APP_SECURITY_CORS_ALLOWED_ORIGINS`. You can provide multiple origins as a comma-separated list.
 
-Do not commit real secrets to Git. Keep local secrets in `src/main/resources/application-local.yml` or untracked `.env` files, and use your hosting platform's environment-variable settings for production.
 
 ## Mail setup
 
 You cannot use random SMTP credentials. If mail is enabled, they must be valid credentials from a real SMTP provider.
 
-For a simple first deploy, keep:
+For a simple first run, keep:
 
 - `ALERTS_MAIL_ENABLED=false`
 
@@ -136,22 +135,3 @@ Invoke-RestMethod -Method GET `
   -Uri "http://localhost:8080/api/portfolio" `
   -Headers @{ Authorization = "Bearer YOUR_TOKEN" }
 ```
-
-## Phase 3 notes
-
-- Alpha Vantage quotes are fetched with `WebClient`
-- Quote cache TTL is `60` seconds
-- A scheduled poll refreshes tracked symbols every `60` seconds
-
-## Phase 4 notes
-
-- Scheduler refreshes now publish STOMP messages to `/topic/prices/{ticker}`
-- The React frontend subscribes to live ticker topics with SockJS + STOMP.js
-- The dashboard updates portfolio totals and Recharts P&L visuals in real time
-
-## Phase 5 notes
-
-- Price alerts are stored in PostgreSQL and evaluated on each scheduled poll
-- Alert emails use Spring Mail and Gmail SMTP-compatible settings from environment variables
-- Leaderboard ranks users by portfolio percentage gain
-- Docker Compose now includes backend, frontend, PostgreSQL, and Redis
