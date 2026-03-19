@@ -50,10 +50,9 @@ The app also defaults JVM timezone handling to `Asia/Kolkata` to avoid the Postg
 - Frontend demo desk: `http://localhost:5173`
 - Frontend container demo: `http://localhost:3000`
 
-## Deployment prep
+## Backend:
 
-Before publishing the project, make sure production uses environment variables instead of local-only defaults:
-
+Environment varibles to configure:
 - `PORT=8080`
 - `DB_URL=jdbc:postgresql://<host>:5432/<database>`
 - `DB_USERNAME=<database-user>`
